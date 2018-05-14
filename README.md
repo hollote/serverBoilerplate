@@ -2,7 +2,7 @@
 Skeleton App nodeJS Express
 
 TODO:
-1. Change upm to yarn
+1. Change upm to yarn (done)
 2. Add documentation (jsDoc)
 3. Add unit tests (possible mocha + chai + sinon)
 4. Configure debug (nodemon, webStorm ws, domain, etc.)
