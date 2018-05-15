@@ -3,9 +3,9 @@ Skeleton App nodeJS Express
 
 TODO:
 1. ~~Change upm to yarn~~
-2. Add documentation (jsDoc, also add jsDoc integration in webStorm)
+2. ~~Configure debug (nodemon)~~
 3. Add unit tests (possible mocha + chai + sinon)
-4. Configure debug (nodemon, webStorm ws, domain, etc.)
+4. Add documentation (jsDoc)
 5. Launch as a cluster in production mode
 6. Clean dependencies
 6. Add Logs (use npm module, see to use cassandra (or other db) as bd storage for logs(as strategy))
