@@ -4,19 +4,20 @@
  * @returns {*}
  */
 function normalizePort(val) {
-    let port = parseInt(val, 10);
+  "use strict";
+  let port = parseInt(val, 10);
 
-    if (isNaN(port)) {
-        // named pipe
-        return val;
-    }
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
 
-    if (port >= 0) {
-        // port number
-        return port;
-    }
+  if (port >= 0) {
+    // port number
+    return port;
+  }
 
-    return false;
+  return false;
 }
 
 module.exports = {normalizePort};
