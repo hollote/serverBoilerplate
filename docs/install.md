@@ -16,3 +16,4 @@ https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldci
 # Tests
 1. `npm run test`
 http://willi.am/node-mocha-supertest/#35
+2. covarage `npm run istanbul`
