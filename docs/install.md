@@ -12,3 +12,7 @@ https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldci
 3. configure in chrome NiM
 4. open debugger, place breakpoint
 5. open app , example http://localhost:3000/
+
+# Tests
+1. `npm run test`
+http://willi.am/node-mocha-supertest/#35
