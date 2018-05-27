@@ -1,69 +1,38 @@
 #!/usr/bin/env node
+"use strict";
 
-/**
- * Module dependencies.
- */
+const path = require('path');
 
+global.PROJECT_ROOT = path.resolve(__dirname, '../');
+global.ENVIROMENT = process.env.NODE_ENV || 'dev';
+global.IS_PRODUCTION = ENVIROMENT === 'production';
+
+const cluster = require('cluster');
+const os = require('os');
 const app = require('../app');
-const debug = require('debug')('basenodejs:server');
-const http = require('http');
 const util = require('../utils/common');
+const log = require('../utils/logger');
+const launchServer = (port) => app.listen(port, () => log.info(`App listening on port ${app.get('port')}`));
 
-/**
- * Get port from environment and store in Express.
- */
+app.set('port', util.normalizePort(process.env.PORT || '3000'));
 
-const port = util.normalizePort(process.env.PORT || '3000');
-app.set('port', port);
+if (!IS_PRODUCTION) {
+  launchServer(app.get('port'));
+  return;
+} else if (cluster.isMaster) {
+  log.info(`Master is running (processId: ${process.pid})`);
 
-/**
- * Create HTTP server.
- */
-
-const server = http.createServer(app);
-
-/**
- * Listen on provided port, on all network interfaces.
- */
-
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
-
-/**
- * Event listener for HTTP server "error" event.
- */
-
-function onError(error) {
-  "use strict";
-  if (error.syscall !== 'listen') {
-    throw error;
+  let cpuCount = process.env.CLUSTER || os.cpus().length;
+  for (let i = 0; i < cpuCount; i += 1) {
+    cluster.fork();
+    log.info(`Forking process number ${i}...`);
   }
-
-  let bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
-
-  // handle specific listen errors with friendly messages
-  switch (error.code) {
-    case 'EACCES':
-      console.error(bind + ' requires elevated privileges');
-      process.exit(1);
-      break;
-    case 'EADDRINUSE':
-      console.error(bind + ' is already in use');
-      process.exit(1);
-      break;
-    default:
-      throw error;
-  }
+} else {
+  launchServer(app.get('port'));
+  log.info(`Worker started (processId: ${process.pid})`);
 }
 
-/**
- * Event listener for HTTP server "listening" event.
- */
-
-function onListening() {
-  "use strict";
-  let addr = server.address();
-  let bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
-  debug('Listening on ' + bind);
-}
+cluster.on('exit', function (worker) {
+  log.info('Worker %d died :(', worker.id);
+  cluster.fork();
+});

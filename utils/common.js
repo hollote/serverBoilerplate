@@ -1,10 +1,10 @@
+"use strict";
 /**
  * Normalize a port into a number, string, or false.
  * @param val
  * @returns {*}
  */
 function normalizePort(val) {
-  "use strict";
   let port = parseInt(val, 10);
 
   if (isNaN(port)) {
