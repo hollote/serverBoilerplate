@@ -1,15 +1,23 @@
 "use strict";
 
-const createError = require('http-errors');
+const configDatabase = require('../config/database');
 const express = require('express');
+const app = express();
+
+// const createError = require('http-errors');
+const passport = require('passport');
 const path = require('path');
-const sassMiddleware = require('node-sass-middleware');
+
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const log = require('./utils/logger');
-const session = require('express-session');
 
-const app = express();
+const sassMiddleware = require('node-sass-middleware');
+const log = require('./utils/logger');
+
+const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
+
+require('../config/passport')(passport);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -26,22 +34,26 @@ app.use(sassMiddleware({
   indentedSyntax: true, // true = .sass and false = .scss
   sourceMap: true
 }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(PROJECT_ROOT, 'public')));
 
-//TODO: save session in store
-// app.use(session({
-//   key: 'sid',
-//   secret: 'session_cookie_secret',
-//   store: sessionStore,
-//   resave: false,
-//   saveUninitialized: false
-// }));
+app.use(session({
+  store: new RedisStore({
+    url: configDatabase.redisStore.url
+  }),
+  secret: configDatabase.redisStore.secret,
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
-app.use(require('./controllers'));
+app.use(require('./controllers/index'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  next(createError(404));
+  console.log(req);
+  log.info(`requested url: ${req.baseUrl}`);
+  // next(createError(404));
 });
 
 // error handler

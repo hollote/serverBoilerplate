@@ -4,19 +4,18 @@
 const path = require('path');
 
 global.PROJECT_ROOT = path.resolve(__dirname, '../');
-global.ENVIROMENT = process.env.NODE_ENV || 'dev';
-global.IS_PRODUCTION = ENVIROMENT === 'production';
 
 const cluster = require('cluster');
 const os = require('os');
 const app = require('../app');
-const util = require('../utils/common');
-const log = require('../utils/logger');
+const util = require('../app/utils/common');
+const log = require('../app/utils/logger');
 const launchServer = (port) => app.listen(port, () => log.info(`App listening on port ${app.get('port')}`));
 
 app.set('port', util.normalizePort(process.env.PORT || '3000'));
+app.set('env', process.env.NODE_ENV || 'development');
 
-if (!IS_PRODUCTION) {
+if (app.get('env') !== 'production') {
   launchServer(app.get('port'));
   return;
 } else if (cluster.isMaster) {
