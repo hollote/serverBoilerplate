@@ -5,6 +5,7 @@ const express = require('express');
 const app = express();
 
 // const createError = require('http-errors');
+const mongoose = require('mongoose');
 const passport = require('passport');
 const path = require('path');
 
@@ -17,7 +18,7 @@ const log = require('./utils/logger');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 
-require('../config/passport')(passport);
+require('./auth/passport')(passport);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -36,6 +37,8 @@ app.use(sassMiddleware({
 }));
 app.use(express.static(path.join(PROJECT_ROOT, 'public')));
 
+mongoose.connect(configDatabase.mongoDB.url, { useNewUrlParser: true });
+
 app.use(session({
   store: new RedisStore({
     url: configDatabase.redisStore.url
@@ -51,7 +54,8 @@ app.use(require('./controllers/index'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-  console.log(req);
+  // console.log(req);
+  //TODO: log req.baseUrl correct.
   log.info(`requested url: ${req.baseUrl}`);
   // next(createError(404));
 });

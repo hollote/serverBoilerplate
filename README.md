@@ -21,3 +21,18 @@ Later:
 
 
 All main modules have to be independent and easy to replace
+
+
+How to run:
+
+1. yarn
+2. run redis & mongo in docker containers:
+  https://hub.docker.com/_/redis/
+
+  docker pull redis
+  docker run -p 127.0.0.1:6379:6379 --name some-redis -d redis
+
+  https://hub.docker.com/_/mongo/
+
+  docker pull mongo
+  docker run -p 127.0.0.1:27017:27017 --name some-mongo -d mongo
