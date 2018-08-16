@@ -12,12 +12,10 @@ module.exports = function () {
           return done(err);
         }
         if (!user) {
-          console.log('User not found');
-          return done(null, false);
+          return done(null, false, { message: 'user not found' });
         }
         if (!user.validatePassword(password)) {
-          console.log('Password not valid');
-          return done(null, false);
+          return done(null, false, { message: 'wrong password' });
         }
         return done(null, user);
       });

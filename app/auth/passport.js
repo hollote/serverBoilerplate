@@ -8,7 +8,8 @@ module.exports = function (passport) {
     if (req.isAuthenticated()) {
       return next();
     }
-    res.redirect('/');
+    res.status(401);
+    return res.json({success: false, error: {message: 'Unauthorized'}});
   };
   passport.serializeUser(function (user, cb) {
     //TODO: remove all password from saving in session
