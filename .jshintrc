@@ -93,7 +93,6 @@
     "module": false,
     "global": false,
     "PROJECT_ROOT": false,
-    "ENVIROMENT": false,
-    "IS_PRODUCTION": false
+    "config": false
   }        // additional predefined global variables
 }

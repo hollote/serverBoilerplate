@@ -1,6 +1,6 @@
 const expect = require('chai').expect;
 
-const util = require('../../utils/common');
+const util = require('../../app/utils/common');
 
 describe('Utils', function () {
     it('normalizePort should work correctly', function () {
