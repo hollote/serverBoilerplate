@@ -1,0 +1,27 @@
+version: '3.3'
+
+services:
+  redis:
+    container_name: redis_prod
+    image: redis
+    restart: always
+    ports:
+      - "6379:6379"
+  mongo:
+    container_name: mongo_prod
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+  web:
+    container_name: web_prod
+    image: hollote/auth_app_prod
+    restart: always
+    links:
+        - mongo
+        - redis
+    depends_on:
+      - mongo
+      - redis
+    ports:
+      - "3000:3000"
