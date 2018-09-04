@@ -6,7 +6,6 @@ module.exports = {
     secret: process.env.REDIS_STORE_SECRET || 'secret'
   },
   mongoDB: {
-    url: 'mongodb://mongo:27017/baseNodeJs'
-    //TODO: move to docker compose environment variables configuration
+    url: process.env.MONGO_STORE_URI || 'mongodb://localhost:27017/baseNodeJs'
   }
 };

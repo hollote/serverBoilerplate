@@ -9,11 +9,12 @@ TODO:
 5. ~~unit tests coverage~~
 6. ~~js hint validation~~
 7. Pre commit hook -- tests, jshint
-8. Launch as a cluster in production mode
+8. ~~Launch as a cluster in production mode~~
 9. Clean dependencies
 10. Add Logs (use npm module, see to use cassandra (or other db) as bd storage for logs(as strategy))
 11. Passport + passport-local, save user session in Redis (as example https://medium.com/devschacht/node-hero-chapter-8-27b74c33a5ce)
 12. RBAC (later)
+13. launch all via docker (need to add health check and wait for containers start)
 
 
 Later:
