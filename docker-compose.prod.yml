@@ -6,30 +6,27 @@ services:
     image: redis
     restart: always
     volumes:
-      - ./data/db/redis:/data
-    ports:
-      - "6379:6379"
+      - ./data/db/redis/data:/data
     entrypoint: redis-server --appendonly yes
   mongo:
     container_name: mongo_prod
     image: mongo
     restart: always
-    ports:
-      - "27017:27017"
     environment:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
     volumes:
-      - ./data/db/mongo:/data/db
+      - ./data/db/mongo/data:/data/db
   web:
     container_name: web_prod
     image: hollote/auth_app_prod
     restart: always
     environment:
-        - MONGO_STORE_URI=mongodb://mongo:27017/baseNodeJs
-        - REDIS_STORE_URI=//redis:6379
-        - REDIS_STORE_SECRET=secret
-        - NODE_ENV=production
+      - MONGO_STORE_URI=mongodb://mongo:27017/baseNodeJs
+      - REDIS_STORE_URI=//redis:6379
+      - REDIS_STORE_SECRET=secret
+      - NODE_ENV=production
+      - PORT=3000
     links:
       - mongo
       - redis
