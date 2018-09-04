@@ -7,10 +7,10 @@
     "test": "mocha ./test/**/*.test.js",
     "istanbul": "nyc mocha",
     "debug": "nodemon --inspect ./bin/www",
-    "create_image_prod": "docker build -f Dockerfile -t hollote/auth_app_prod .",
-    "create_image_dev": "docker build -f Dockerfile -t hollote/auth_app_dev .",
+    "create_image_prod": "docker build -f Dockerfile.prod -t hollote/auth_app_prod .",
+    "create_image_dev": "docker build -f Dockerfile.dev -t hollote/auth_app_dev .",
     "docker_dev": "docker-compose up -d",
-    "docker_prod": "docker-compose -f docker-compose.prod.yml up -d",
+    "docker_prod": "docker-compose -f ../docker-compose.prod.yml up -d",
     "prod": "npm run create_image_prod && npm run docker_prod"
   },
   "dependencies": {

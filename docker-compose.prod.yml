@@ -9,6 +9,7 @@ services:
       - ./data/db/redis:/data
     ports:
       - "6379:6379"
+    entrypoint: redis-server --appendonly yes
   mongo:
     container_name: mongo_prod
     image: mongo
