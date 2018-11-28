@@ -1,5 +1,13 @@
-# baseNodeJs
-Skeleton App nodeJS Express
+# Server boilerplate
+
+### Environment:
+- Server
+    - Express
+    - Mongoose
+    - Passport
+- DB
+    - Redis (for sessions)
+    - Mongo
 
 TODO:
 1. ~~Change upm to yarn~~
