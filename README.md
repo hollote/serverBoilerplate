@@ -1,5 +1,5 @@
 # Server boilerplate
-### Badges will be here
+### Badges will be here https://shields.io/#/
 Server boilerplate API
 
 ### Environment:
@@ -26,7 +26,7 @@ Server boilerplate API
        ├─config            # configs folder
        └─test              # test folder
 
-### Getting started
+### Install
 install yarn ( https://yarnpkg.com/lang/en/docs/install/ )
 #### Setup using Docker:
 - install Docker
