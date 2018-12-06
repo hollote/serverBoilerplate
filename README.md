@@ -1,4 +1,6 @@
 # Server boilerplate
+### Badges will be here
+Server boilerplate API
 
 ### Environment:
 - Server
@@ -11,31 +13,18 @@
 
 ### Architecture
 
-    ├─client               # frontend folder
-    │  ├─src               # frontend src
-    │  │  ├─api
-    │  │  ├─router
-    │  │  ├─styles
-    │  │  ├─components
-    │  │  ├─store          # state management
-    │  │  │  └─modules
-    │  │  └─view           # app pages
-    │  │     └─auth
-    │  └─static            # static folder
-    |
     └─server               # server folder
-       └─src               # server src
-          ├─api            # server api list
-          │  ├─auth        # completely token-based authentication
-          │  ├─thing
-          │  └─user
-          ├─config         # server configurations
-          │  ├─index       # default server port, mongo uri, etc settings
-          │  ├─security    # security settins
-          │  └─seed        # populate database with sample data on server start
-          ├─entry.js       # entry file for environment setup
-          ├─main.js        # main file after entry
-          └─routes.js      # router
+       ├─app
+       │  ├─auth
+       │  │  └─strategies  # strategies for auth
+       │  ├─controllers    # routes
+       │  │  └─api         # api
+       │  ├─models         # models
+       │  ├─utils          # utils
+       │  └─views          # will be removed
+       ├─bin               # launch application 
+       ├─config            # configs folder
+       └─test              # test folder
 
 ### Run through Docker
 ```bash
