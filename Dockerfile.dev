@@ -11,4 +11,4 @@ RUN yarn install
 
 #Expose port and start application
 EXPOSE 3001
-CMD [ "npm", "run", "debug" ]
+CMD [ "yarn", "run", "debug" ]

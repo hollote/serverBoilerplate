@@ -35,7 +35,7 @@ app.use(sassMiddleware({
   indentedSyntax: true, // true = .sass and false = .scss
   sourceMap: true
 }));
-app.use(express.static(path.join(PROJECT_ROOT, 'public')));
+app.use(express.static(path.join(global.PROJECT_ROOT, 'public')));
 
 mongoose.connect(configDatabase.mongoDB.url, { useNewUrlParser: true });
 
@@ -71,4 +71,6 @@ app.use(function (err, req, res) {
   res.render('error');
 });
 
-module.exports = app;
+export {
+  app
+};

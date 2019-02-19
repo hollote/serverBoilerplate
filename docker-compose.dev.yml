@@ -45,7 +45,5 @@ services:
       - "3001:3001"
       - "9229:9229"
     volumes:
-      - ./app:/usr/src/app
-      - ./bin:/usr/src/bin
-      - ./config:/usr/src/config
-      - ./public:/usr/src/public
+      - ./src:/usr/src/src
+      - ./dist:/usr/src/dist
