@@ -7,13 +7,9 @@
     "test": "mocha ./test/**/*.test.js",
     "istanbul": "nyc mocha",
     "debug": "nodemon --delay 80ms --watch app --watch config --watch ./bin/www --exec 'npm run inspect'",
-    "create_image_prod": "docker build -f Dockerfile.prod -t hollote/auth_app_prod .",
-    "create_image_dev": "docker build -f Dockerfile.dev -t hollote/auth_app_dev .",
-    "docker_dev": "docker-compose -f ../docker-compose.dev.yml up -d",
-    "docker_prod": "docker-compose -f ../docker-compose.prod.yml up -d",
-    "prod": "npm run create_image_prod && npm run docker_prod",
-    "dev": "npm run create_image_dev && npm run docker_dev",
-    "inspect": "kill-port --port 9229 && node --inspect=0.0.0.0:9229 ./bin/www"
+    "inspect": "kill-port --port 9229 && node --inspect=0.0.0.0:9229 ./bin/www",
+    "build:prod": "docker build -f Dockerfile.dev -t dev .",
+    "build:dev": "docker build -f Dockerfile.prod -t prod ."
   },
   "dependencies": {
     "bcrypt": "^3.0.0",
