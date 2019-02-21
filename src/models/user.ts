@@ -8,6 +8,7 @@ export interface IUserModel extends IUser, Document {
   validatePassword(password: string): boolean
 }
 import * as bcrypt from 'bcrypt';
+import _ = require("lodash");
 
 export let UserSchema: Schema = new Schema({
   auth: {
@@ -37,6 +38,8 @@ export let UserSchema: Schema = new Schema({
   }
 
 });
+
+export const getUserData = (user: IUserModel) => _.pick(user, 'id', 'auth.local.email', 'auth.local.username');
 
 UserSchema.methods.generateHash = function (password: string) {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(8));

@@ -9,21 +9,17 @@ import {IUserModel, User} from "../models/user";
 export let init = (passport: PassportStatic) => {
 
   passport.serializeUser<any, any>((user: IUserModel, cb: any) => {
-    console.log(user);
-    cb(null, user);
+    cb(null, user.id);
   });
 
-  passport.deserializeUser((user: IUserModel, cb: any) => {
-    console.log(user);
-    cb(null, user);
-    // User.findById(id, (err, user) => {
-    //   cb(err, user);
-    // });
+  passport.deserializeUser((userId: string, cb: any) => {
+    User.findById(userId, (err, user) => {
+      cb(err, user);
+    });
   });
 
-  const localLoginStrategy = (username: string, password: string, cb: any) =>
-    User.findOne({'auth.local.username': username}, function (err: any, user: IUserModel) {
-      console.log(1);
+  const localLoginStrategy = (email: string, password: string, cb: any) =>
+    User.findOne({'auth.local.email': email}, function (err: any, user: IUserModel) {
       if (err) {
         return cb(err);
       }
@@ -36,19 +32,17 @@ export let init = (passport: PassportStatic) => {
       return cb(null, user);
     });
 
-  const localSignupStrategy = (username: string, password: string, cb: any) =>
-    User.findOne({'auth.local.username': username}, function (err: any, user: IUserModel) {
-      console.log(2);
+  const localSignupStrategy = (req: Request, email: string, password: string, cb: any) =>
+    User.findOne({'auth.local.email': email}, function (err: any, user: IUserModel) {
       if (err) {
         return cb(err);
       }
       if (user) {
-        console.log('User already created');
-        return cb(null, false);
+        return cb(null, false, {message: 'user already created'});
       }
       let newUser = new User();
-      newUser.auth.local.username = username;
-      // also save other data on signup (as email)
+      newUser.auth.local.email = email;
+      newUser.auth.local.username = req.body.username;
       newUser.auth.local.password = newUser.generateHash(password);
       newUser.save(function (err: any) {
         if (err) {
@@ -59,7 +53,11 @@ export let init = (passport: PassportStatic) => {
     });
 
   passport.use('local-login', new Strategy(localLoginStrategy));
-  passport.use('local-signup', new Strategy(localSignupStrategy));
+  passport.use('local-signup', new Strategy({
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true,
+  }, localSignupStrategy));
 
 };
 

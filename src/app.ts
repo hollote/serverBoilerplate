@@ -12,12 +12,12 @@ import * as redisConnect from 'connect-redis';
 import {config} from './config/database';
 import { init as passportConfig  } from "./config/passport";
 import { router } from './controllers';
+
 passportConfig(passport);
 
 const app = express();
 const RedisStore = redisConnect(session);
 mongoose.connect(config.mongoDB.url, {useNewUrlParser: true});
-// passportConfig(passport);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

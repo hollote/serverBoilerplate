@@ -1,8 +1,10 @@
 "use strict";
-import * as _ from 'lodash';
+
 import * as express from 'express';
-const router = express.Router();
 import * as passport from "passport";
+
+const router = express.Router();
+import {getUserData} from "../../models/user";
 
 /**
  * check if login
@@ -37,7 +39,7 @@ router.post('/', function (req, res, next) {
       return res.json({success: false, error: {info}});
     }
     res.status(200);
-    return res.json({success: true, data: {user: _.omit(req.user, 'auth.local.password')}});
+    return res.json({success: true, data: {user: getUserData(req.user)}});
   })(req, res, next);
 });
 
@@ -45,19 +47,22 @@ router.post('/', function (req, res, next) {
  * SignUp
  */
 //TODO: fix response wait if user already exists
+
 router.post('/signup',
   passport.authenticate('local-signup'),
   function (req, res) {
     res.status(200);
-    return res.json({success: true, data: {user: _.omit(req.user, 'auth.local.password')}});
-  });
+    return res.json({success: true, data: {user: getUserData(req.user)}});
+  }
+);
 
 /**
  * Logout
  */
 router.post('/logout', function (req, res) {
   req.logout();
-  res.redirect('/');
+  res.status(200);
+  return res.json({success: true, data: {message: 'Logout successful'}});
 });
 
 export {
