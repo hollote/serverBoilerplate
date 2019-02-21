@@ -12,7 +12,6 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
-const sassMiddleware = require('node-sass-middleware');
 const log = require('./utils/logger');
 
 const session = require('express-session');
@@ -29,12 +28,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use(sassMiddleware({
-  src: path.join(__dirname, 'public'),
-  dest: path.join(__dirname, 'public'),
-  indentedSyntax: true, // true = .sass and false = .scss
-  sourceMap: true
-}));
 app.use(express.static(path.join(PROJECT_ROOT, 'public')));
 
 mongoose.connect(configDatabase.mongoDB.url, { useNewUrlParser: true });
