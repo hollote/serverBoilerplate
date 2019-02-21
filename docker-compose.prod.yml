@@ -2,31 +2,36 @@ version: '3.3'
 
 services:
   redis:
-    container_name: redis_prod
+    container_name: "redis_prod"
     image: redis
     restart: always
     volumes:
-      - ./data/db/redis/data:/data
+      - ./data/db/redis/prod/data:/data
     entrypoint: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
   mongo:
-    container_name: mongo_prod
+    container_name: "mongo_prod"
     image: mongo
     restart: always
     environment:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
     volumes:
-      - ./data/db/mongo/data:/data/db
+      - ./data/db/mongo/prod/data:/data/db
+    healthcheck:
+      test: ["CMD", "mongo-healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
   web:
-    container_name: web_prod
-    image: hollote/auth_app_prod
+    container_name: "web_prod"
+    image: prod
     restart: always
-    environment:
-      - MONGO_STORE_URI=mongodb://mongo:27017/baseNodeJs
-      - REDIS_STORE_URI=//redis:6379
-      - REDIS_STORE_SECRET=secret
-      - NODE_ENV=production
-      - PORT=3000
+    env_file: .env
     links:
       - mongo
       - redis
