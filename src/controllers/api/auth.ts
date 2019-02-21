@@ -1,8 +1,8 @@
 "use strict";
-const _ = require('lodash');
-const express = require('express');
+import * as _ from 'lodash';
+import * as express from 'express';
 const router = express.Router();
-const passport = require('passport');
+import * as passport from "passport";
 
 /**
  * check if login
@@ -60,6 +60,8 @@ router.post('/logout', function (req, res) {
   res.redirect('/');
 });
 
-module.exports = router;
+export {
+  router
+};
 
 //TODO: end /signup middleware, /logout  + move them upper (before /)

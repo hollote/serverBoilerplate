@@ -2,15 +2,14 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
-    "outDir": "dist",
-    "sourceMap": true
+    "moduleResolution": "node",
+    "outDir": "build",
+    "strict": true,
+    "sourceMap": true,
+    "allowSyntheticDefaultImports": true
   },
-  "files": [
-    "./node_modules/@types/node/index.d.ts",
-    "./src/types/custom.d.ts"
-  ],
   "include": [
-    "src/**/*.ts"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules"

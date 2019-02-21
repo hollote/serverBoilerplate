@@ -7,7 +7,7 @@
     "test": "mocha ./test/**/*.test.js",
     "istanbul": "nyc mocha",
     "debug": "nodemon --delay 80ms --watch src --ext ts --exec 'npm run inspect'",
-    "inspect": "kill-port --port 9229 && tsc && node --inspect=0.0.0.0:9229 ./dist/index",
+    "inspect": "kill-port --port 9229 && (yarn run tsc || exit 0) && node --inspect=0.0.0.0:9229 ./bin/www",
     "build:prod": "docker build -f Dockerfile.dev -t dev .",
     "build:dev": "docker build -f Dockerfile.prod -t prod .",
     "tsc": "tsc"
@@ -23,10 +23,9 @@
     "lodash": "^4.17.10",
     "mongoose": "^5.2.6",
     "morgan": "~1.9.0",
-    "node-sass-middleware": "0.11.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
-    "winston": "^2.4.2"
+    "winston": "^3.1.0"
   },
   "devDependencies": {
     "chai": "^4.1.2",
@@ -41,7 +40,17 @@
     "typescript": "^3.3.3",
     "@types/node": "^11.9.4",
     "@types/express": "^4.16.1",
-    "@types/winston": "^2.4.4"
+    "@types/winston": "^2.4.4",
+    "@types/passport": "^1.0.0",
+    "@types/mongoose": "^5.3.18",
+    "@types/mongodb": "^3.1.19",
+    "@types/passport-local": "^1.0.33",
+    "@types/lodash": "^4.14.121",
+    "@types/cookie-parser": "^1.4.1",
+    "@types/express-session": "^1.15.12",
+    "@types/connect-redis": "^0.0.8",
+    "@types/bcrypt": "^3.0.0",
+    "@types/express-flash": "^0.0.0"
   },
   "nyc": {
     "exclude": [
