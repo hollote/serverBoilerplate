@@ -1,36 +1,4 @@
 #!/usr/bin/env node
 "use strict";
 
-const path = require('path');
-
-global.PROJECT_ROOT = path.resolve(__dirname, '../');
-
-const cluster = require('cluster');
-const os = require('os');
-const App = require('../build/app').app;
-const normalizePort = require('../build/utils/common').normalizePort;
-const logger = require('../build/utils/logger').logger;
-const launchServer = (port) => App.listen(port, () => logger.info(`App listening on port ${App.get('port')}`));
-
-App.set('port', normalizePort(process.env.PORT || '3000'));
-App.set('env', process.env.NODE_ENV || 'development');
-
-if (App.get('env') !== 'production') {
-  launchServer(App.get('port'));
-} else if (cluster.isMaster) {
-  logger.info(`Master is running (processId: ${process.pid})`);
-
-  let cpuCount = process.env.CLUSTER || os.cpus().length;
-  for (let i = 0; i < cpuCount; i += 1) {
-    cluster.fork();
-    logger.info(`Forking process number ${i}...`);
-  }
-} else {
-  launchServer(App.get('port'));
-  logger.info(`Worker started (processId: ${process.pid})`);
-}
-
-cluster.on('exit', function (worker) {
-  logger.info('Worker %d died :(', worker.id);
-  cluster.fork();
-});
+const app = require('../build/index');

@@ -36,7 +36,7 @@ app.use(session({
   saveUninitialized: false
 }));
 
-app.use(express.static(path.join(global.PROJECT_ROOT, 'public')));
+app.use(express.static( './public'));
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -46,3 +46,9 @@ app.use(router);
 export {
   app
 };
+
+// TODO:
+// tslint
+// fix tslint errors
+// auth middleware
+// check register/logout/login/route without auth/ route with auth
