@@ -8,8 +8,9 @@
     "istanbul": "nyc mocha",
     "debug": "nodemon",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
-    "build:prod": "docker build -f Dockerfile.dev -t dev .",
-    "build:dev": "docker build -f Dockerfile.prod -t prod .",
+    "lint:fix": "tslint --fix -c tslint.json 'src/**/*.ts'",
+    "build:docker:prod": "docker build -f Dockerfile.dev -t dev .",
+    "build:docker:dev": "docker build -f Dockerfile.prod -t prod .",
     "tsc": "tsc"
   },
   "husky": {
