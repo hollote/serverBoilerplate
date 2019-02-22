@@ -57,10 +57,10 @@ UserSchema.methods.validatePassword = function(password: string): boolean {
 
 export const User: Model<IUserModel> = model<IUserModel>('User', UserSchema);
 
-export const userCreate = (createAttr: IUserCreateAttr, cb: any) => {
+export const userCreate = (createAttr: IUserCreateAttr) => {
   const newUser = new User();
   newUser.auth.local.email = createAttr.email;
   newUser.auth.local.username = createAttr.username;
   newUser.auth.local.password = newUser.generateHash(createAttr.password);
-  newUser.save(cb);
+  return newUser.save();
 };

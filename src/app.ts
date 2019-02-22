@@ -8,6 +8,7 @@ import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 import * as session from 'express-session';
 import * as redisConnect from 'connect-redis';
+import * as helmet from 'helmet';
 
 import {config} from './config/database';
 import { init as passportConfig  } from './config/passport';
@@ -19,7 +20,7 @@ const app = express();
 const RedisStore = redisConnect(session);
 mongoose.connect(config.mongoDB.url, {useNewUrlParser: true});
 
-// view engine setup
+app.use(helmet());
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
@@ -48,6 +49,4 @@ export {
 };
 
 // TODO:
-// auth middleware
-// use promises instead of callbacks
 // check register/logout/login/route without auth/ route with auth

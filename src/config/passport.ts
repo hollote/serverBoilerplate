@@ -41,11 +41,10 @@ export let init = (passport: PassportStatic) => {
         return cb(null, false, {message: 'user already created'});
       }
 
-      userCreate({email, username: req.body.username, password}, (err: any, newUser: IUserModel) => {
-        if (err) {
-          throw err;
-        }
+      userCreate({email, username: req.body.username, password}).then((newUser) => {
         return cb(null, newUser);
+      }, (err: any) => {
+        throw err;
       });
     });
 
