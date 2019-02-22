@@ -14,12 +14,12 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "yarn run lint"
     }
   },
   "lint-staged": {
-    "*.{ts,vue}": [
-      "yarn run lint -- --no-fix",
+    "*.{ts}": [
+      "yarn run lint",
       "git add"
     ]
   },

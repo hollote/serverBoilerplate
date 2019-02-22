@@ -1,7 +1,8 @@
-"use strict";
+'use strict';
 
 import * as cluster from 'cluster';
 import * as os from 'os';
+
 import {app as App} from './app';
 import {normalizePort} from './utils/common';
 import {logger} from './utils/logger';
@@ -16,7 +17,7 @@ if (App.get('env') !== 'production') {
 } else if (cluster.isMaster) {
   logger.info(`Master is running (processId: ${process.pid})`);
 
-  let cpuCount = process.env.CLUSTER || os.cpus().length;
+  const cpuCount = process.env.CLUSTER || os.cpus().length;
   for (let i = 0; i < cpuCount; i += 1) {
     cluster.fork();
     logger.info(`Forking process number ${i}...`);
@@ -26,11 +27,11 @@ if (App.get('env') !== 'production') {
   logger.info(`Worker started (processId: ${process.pid})`);
 }
 
-cluster.on('exit', function (worker) {
+cluster.on('exit', (worker) => {
   logger.info('Worker %d died :(', worker.id);
   cluster.fork();
 });
 
 export {
-  App
-}
+  App,
+};

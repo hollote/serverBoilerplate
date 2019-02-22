@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
 import {PassportStatic} from 'passport';
-import {Strategy} from "passport-local";
+import {Strategy} from 'passport-local';
 import {Request, Response, NextFunction} from 'express';
 
-import {IUserModel, User} from "../models/user";
+import {IUserModel, User} from '../models/user';
 
 export let init = (passport: PassportStatic) => {
 
@@ -19,7 +19,7 @@ export let init = (passport: PassportStatic) => {
   });
 
   const localLoginStrategy = (email: string, password: string, cb: any) =>
-    User.findOne({'auth.local.email': email}, function (err: any, user: IUserModel) {
+    User.findOne({'auth.local.email': email}, (err: any, user: IUserModel) => {
       if (err) {
         return cb(err);
       }
@@ -33,18 +33,18 @@ export let init = (passport: PassportStatic) => {
     });
 
   const localSignupStrategy = (req: Request, email: string, password: string, cb: any) =>
-    User.findOne({'auth.local.email': email}, function (err: any, user: IUserModel) {
+    User.findOne({'auth.local.email': email}, (err: any, user: IUserModel) => {
       if (err) {
         return cb(err);
       }
       if (user) {
         return cb(null, false, {message: 'user already created'});
       }
-      let newUser = new User();
+      const newUser = new User();
       newUser.auth.local.email = email;
       newUser.auth.local.username = req.body.username;
       newUser.auth.local.password = newUser.generateHash(password);
-      newUser.save(function (err: any) {
+      newUser.save((err: any) => {
         if (err) {
           throw err;
         }

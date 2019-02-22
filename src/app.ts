@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
 import * as express from 'express';
 import * as mongoose from 'mongoose';
-import * as passport from "passport";
+import * as passport from 'passport';
 import * as path from 'path';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
@@ -10,7 +10,7 @@ import * as session from 'express-session';
 import * as redisConnect from 'connect-redis';
 
 import {config} from './config/database';
-import { init as passportConfig  } from "./config/passport";
+import { init as passportConfig  } from './config/passport';
 import { router } from './controllers';
 
 passportConfig(passport);
@@ -29,11 +29,11 @@ app.use(bodyParser.json());
 
 app.use(session({
   store: new RedisStore({
-    url: config.redisStore.url
+    url: config.redisStore.url,
   }),
   secret: config.redisStore.secret,
   resave: false,
-  saveUninitialized: false
+  saveUninitialized: false,
 }));
 
 app.use(express.static( './public'));
@@ -44,7 +44,7 @@ app.use(passport.session());
 app.use(router);
 
 export {
-  app
+  app,
 };
 
 // TODO:

@@ -1,14 +1,16 @@
-"use strict";
+'use strict';
 
-import { Document, Schema, Model, model} from "mongoose";
-import { IUser } from "../interfaces/user";
+import {Document, Schema, Model, model} from 'mongoose';
+import * as bcrypt from 'bcrypt';
+import _ = require('lodash');
+
+import {IUser} from '../interfaces/user';
 
 export interface IUserModel extends IUser, Document {
-  generateHash(password: string): string,
-  validatePassword(password: string): boolean
+  generateHash(password: string): string;
+
+  validatePassword(password: string): boolean;
 }
-import * as bcrypt from 'bcrypt';
-import _ = require("lodash");
 
 export let UserSchema: Schema = new Schema({
   auth: {
@@ -16,7 +18,7 @@ export let UserSchema: Schema = new Schema({
       username: String,
       email: String,
       password: String,
-    }
+    },
     // facebook: {
     //   id: String,
     //   token: String,
@@ -35,17 +37,17 @@ export let UserSchema: Schema = new Schema({
     //   email: String,
     //   name: String
     // }
-  }
+  },
 
 });
 
 export const getUserData = (user: IUserModel) => _.pick(user, 'id', 'auth.local.email', 'auth.local.username');
 
-UserSchema.methods.generateHash = function (password: string) {
+UserSchema.methods.generateHash = (password: string) => {
   return bcrypt.hashSync(password, bcrypt.genSaltSync(8));
 };
-UserSchema.methods.validatePassword = function (password: string) {
+UserSchema.methods.validatePassword = function(password: string): boolean {
   return bcrypt.compareSync(password, this.auth.local.password);
 };
 
-export const User: Model<IUserModel> = model<IUserModel>("User", UserSchema);
+export const User: Model<IUserModel> = model<IUserModel>('User', UserSchema);
