@@ -4,7 +4,7 @@ import {PassportStatic} from 'passport';
 import {Strategy} from 'passport-local';
 import {Request, Response, NextFunction} from 'express';
 
-import {IUserModel, User} from '../models/user';
+import {IUserModel, User, userCreate} from '../models/user';
 
 export let init = (passport: PassportStatic) => {
 
@@ -40,11 +40,8 @@ export let init = (passport: PassportStatic) => {
       if (user) {
         return cb(null, false, {message: 'user already created'});
       }
-      const newUser = new User();
-      newUser.auth.local.email = email;
-      newUser.auth.local.username = req.body.username;
-      newUser.auth.local.password = newUser.generateHash(password);
-      newUser.save((err: any) => {
+
+      userCreate({email, username: req.body.username, password}, (err: any, newUser: IUserModel) => {
         if (err) {
           throw err;
         }

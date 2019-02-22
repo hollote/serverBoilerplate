@@ -48,7 +48,6 @@ export {
 };
 
 // TODO:
-// tslint
-// fix tslint errors
 // auth middleware
+// use promises instead of callbacks
 // check register/logout/login/route without auth/ route with auth
