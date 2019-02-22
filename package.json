@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "mocha ./test/**/*.test.js",
-    "istanbul": "nyc mocha",
+    "test": "nyc mocha",
+    "coverage": "nyc report",
     "debug": "nodemon",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "lint:fix": "tslint --fix -c tslint.json 'src/**/*.ts'",
@@ -58,6 +58,9 @@
     "@types/winston": "^2.4.4",
     "@types/joi": "^14.3.2",
     "@types/helmet": "^0.0.42",
+    "@types/mocha": "^5.2.6",
+    "@types/supertest": "^2.0.7",
+    "@types/chai": "^4.1.7",
     "chai": "^4.1.2",
     "jsdoc": "^3.5.5",
     "jshint": "^2.9.5",
@@ -76,8 +79,18 @@
     "tslint": "^5.12.1"
   },
   "nyc": {
-    "exclude": [
-      "app.js"
-    ]
+    "check-coverage": true,
+    "all": true,
+    "extension": [
+      ".ts"
+    ],
+    "include": [
+      "src/**/*.ts"
+    ],
+    "reporter": [
+      "html",
+      "text"
+    ],
+    "report-dir": "reports/coverage"
   }
 }
