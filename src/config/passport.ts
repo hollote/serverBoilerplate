@@ -52,7 +52,10 @@ export let init = (passport: PassportStatic) => {
       });
     });
 
-  passport.use('local-login', new Strategy(localLoginStrategy));
+  passport.use('local-login', new Strategy({
+    usernameField: 'email',
+    passwordField: 'password',
+  }, localLoginStrategy));
   passport.use('local-signup', new Strategy({
     usernameField: 'email',
     passwordField: 'password',

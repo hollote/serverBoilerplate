@@ -24,10 +24,10 @@ router.get('/', (req, res) => {
     },
   });
 });
+
 /**
  * Login
  */
-
 router.post('/', (req, res, next) => {
   passport.authenticate('local-login', (err, user, info) => {
     if (err) {

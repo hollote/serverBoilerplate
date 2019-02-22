@@ -6,7 +6,7 @@ RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 WORKDIR /usr/app
 
 # Install app dependencies
-COPY package*.json yarn.lock tsconfig.json ./
+COPY package*.json yarn.lock tsconfig.json nodemon.json ./
 RUN yarn install
 
 #Expose port and start application
