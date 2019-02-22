@@ -2,7 +2,7 @@
 
 import * as express from 'express';
 
-import { isAuthenticated } from '../../config/passport';
+import { isAuthenticated } from '../../middleware/auth';
 import { router as auth } from './auth';
 
 const router = express.Router();

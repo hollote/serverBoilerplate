@@ -12,7 +12,7 @@ import * as helmet from 'helmet';
 
 import {config} from './config/database';
 import { init as passportConfig  } from './config/passport';
-import { router } from './controllers';
+import { router } from './routes';
 
 passportConfig(passport);
 
@@ -21,13 +21,9 @@ const RedisStore = redisConnect(session);
 mongoose.connect(config.mongoDB.url, {useNewUrlParser: true});
 
 app.use(helmet());
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
-
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-
 app.use(session({
   store: new RedisStore({
     url: config.redisStore.url,
@@ -36,8 +32,6 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
 }));
-
-app.use(express.static( './public'));
 
 app.use(passport.initialize());
 app.use(passport.session());

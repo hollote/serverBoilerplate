@@ -2,7 +2,7 @@
 
 import {PassportStatic} from 'passport';
 import {Strategy} from 'passport-local';
-import {Request, Response, NextFunction} from 'express';
+import {Request} from 'express';
 
 import {IUserModel, User, userCreate} from '../models/user';
 
@@ -57,13 +57,4 @@ export let init = (passport: PassportStatic) => {
     passwordField: 'password',
     passReqToCallback: true,
   }, localSignupStrategy));
-
-};
-
-export let isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-  res.status(401);
-  return res.json({success: false, error: {message: 'Unauthorized'}});
 };
