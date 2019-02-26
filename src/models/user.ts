@@ -1,13 +1,14 @@
 'use strict';
 
 import {Document, Schema, Model, model} from 'mongoose';
-import * as bcrypt from 'bcrypt';
 import _ = require('lodash');
 
 import {IUser} from '../interfaces/user';
+import {generateHash, validatePassword} from '../utils/common';
 
 export interface IUserModel extends IUser, Document {
   generateHash(password: string): string;
+
   validatePassword(password: string): boolean;
 }
 
@@ -20,9 +21,24 @@ export interface IUserCreateAttr {
 export let UserSchema: Schema = new Schema({
   auth: {
     local: {
-      username: String,
-      email: String,
-      password: String,
+      username: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+      },
+      email: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+      },
+      password: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+      },
     },
     // facebook: {
     //   id: String,
@@ -45,18 +61,13 @@ export let UserSchema: Schema = new Schema({
   },
 
 });
-
-export const getUserData = (user: IUserModel) => _.pick(user, 'id', 'auth.local.email', 'auth.local.username');
-
-UserSchema.methods.generateHash = (password: string) => {
-  return bcrypt.hashSync(password, bcrypt.genSaltSync(8));
-};
+UserSchema.methods.generateHash = generateHash;
 UserSchema.methods.validatePassword = function(password: string): boolean {
-  return bcrypt.compareSync(password, this.auth.local.password);
+  return validatePassword(password, this.auth.local.password);
 };
 
 export const User: Model<IUserModel> = model<IUserModel>('User', UserSchema);
-
+export const getUserData = (user: IUserModel) => _.pick(user, 'id', 'auth.local.email', 'auth.local.username');
 export const userCreate = (createAttr: IUserCreateAttr) => {
   const newUser = new User();
   newUser.auth.local.email = createAttr.email;

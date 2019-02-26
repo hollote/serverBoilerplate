@@ -4,11 +4,13 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "test": "nyc mocha",
-    "coverage": "nyc report",
-    "debug": "nodemon",
+    "test": "mocha",
+    "coverage": "nyc mocha",
+    "debug": "yarn run kill:debug:port && nodemon",
+    "kill:debug:port": "kill-port --port 9229",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "lint:fix": "tslint --fix -c tslint.json 'src/**/*.ts'",
+    "pre-commit": "yarn run lint && yarn run test",
     "build:docker:prod": "docker build -f Dockerfile.dev -t dev .",
     "build:docker:dev": "docker build -f Dockerfile.prod -t prod .",
     "tsc": "tsc"
@@ -61,6 +63,8 @@
     "@types/mocha": "^5.2.6",
     "@types/supertest": "^2.0.7",
     "@types/chai": "^4.1.7",
+    "@types/sinon": "^7.0.6",
+    "@types/chance": "^1.0.1",
     "chai": "^4.1.2",
     "jsdoc": "^3.5.5",
     "jshint": "^2.9.5",
@@ -76,7 +80,9 @@
     "tslint-origin-ordered-imports-rule": "^1.1.2",
     "husky": "^1.1.3",
     "lint-staged": "^8.0.4",
-    "tslint": "^5.12.1"
+    "tslint": "^5.12.1",
+    "chance": "^1.0.18",
+    "node-mocks-http": "^1.7.3"
   },
   "nyc": {
     "check-coverage": true,
@@ -86,6 +92,11 @@
     ],
     "include": [
       "src/**/*.ts"
+    ],
+    "exclude": [
+      "src/index.ts",
+      "src/utils/logger.ts",
+      "src/interfaces/**/*.ts"
     ],
     "reporter": [
       "html",

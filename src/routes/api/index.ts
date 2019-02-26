@@ -7,6 +7,7 @@ import { router as auth } from './auth';
 
 const router = express.Router();
 router.use('/auth', auth);
+// TODO: create test
 router.use('/profile', isAuthenticated, (req, res) => {
   res.status(200);
   return res.json({

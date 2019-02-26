@@ -3,7 +3,6 @@
 import * as express from 'express';
 import * as mongoose from 'mongoose';
 import * as passport from 'passport';
-import * as path from 'path';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
 import * as session from 'express-session';
@@ -41,6 +40,3 @@ app.use(router);
 export {
   app,
 };
-
-// TODO:
-// check register/logout/login/route without auth/ route with auth

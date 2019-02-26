@@ -1,11 +1,13 @@
 'use strict';
+
 import * as winston from 'winston';
 
-// TODO: check for Singleton
-const logger = winston.createLogger({
-  transports: [
-    new (winston.transports.Console)(),
-  ],
-});
+const transports = [];
+
+if (process.env.NODE_ENV !== 'test') {
+  transports.push(new (winston.transports.Console)());
+}
+
+const logger = winston.createLogger({transports});
 
 export { logger };

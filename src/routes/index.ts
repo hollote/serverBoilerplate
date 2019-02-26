@@ -17,13 +17,14 @@ router.use((req: Request, res: Response, next: NextFunction) => {
 
 router.use('/api/', api);
 
-router.use((req: Request, res: Response, next: NextFunction) => {
+router.use((req: Request, res: Response) => {
   logger.info(`requested url: ${req.url}`);
   res.status(404);
   return res.json({success: false, error: {message: 'Not Found'}});
 });
-
+// TODO: create test
 router.use((err: CustomErrback, req: Request, res: Response) => {
+  console.log(1);
   res.status(err.status || 500);
   return res.json({success: false, error: {message: req.app.get('env') === 'development' ? err.message : ''}});
 });
