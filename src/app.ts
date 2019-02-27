@@ -17,7 +17,11 @@ passportConfig(passport);
 
 const app = express();
 const RedisStore = redisConnect(session);
-mongoose.connect(config.mongoDB.url, {useNewUrlParser: true});
+mongoose.connect(config.mongoDB.url, {
+  useNewUrlParser: true,
+  useFindAndModify: false,
+  useCreateIndex: true,
+});
 
 app.use(helmet());
 app.use(cookieParser());

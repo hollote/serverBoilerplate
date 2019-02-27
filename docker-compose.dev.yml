@@ -1,7 +1,7 @@
 version: '3.3'
 
 services:
-  redis:
+  redis_dev:
     container_name: "redis_dev"
     image: redis
     restart: always
@@ -14,7 +14,7 @@ services:
       interval: 1s
       timeout: 3s
       retries: 30
-  mongo:
+  mongo_dev:
     container_name: "mongo_dev"
     image: mongo
     restart: always
@@ -30,17 +30,17 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-  web:
+  web_dev:
     container_name: "web_dev"
     image: dev
     env_file: .env.development
     restart: always
     links:
-      - mongo
-      - redis
+      - mongo_dev
+      - redis_dev
     depends_on:
-      - mongo
-      - redis
+      - mongo_dev
+      - redis_dev
     ports:
       - "3001:3001"
       - "9229:9229"

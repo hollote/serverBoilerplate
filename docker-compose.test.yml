@@ -1,0 +1,27 @@
+version: '3.3'
+
+services:
+  redis_test:
+    container_name: "redis_test"
+    image: redis
+    restart: always
+    ports:
+      - "6380:6379"
+    volumes:
+      - ./data/db/redis/test/data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 3s
+      retries: 30
+  mongo_test:
+    container_name: "mongo_test"
+    image: mongo
+    restart: always
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./data/db/mongo/test/data:/data/db
+    ports:
+      - "27018:27017"

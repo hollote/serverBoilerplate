@@ -1,7 +1,7 @@
 version: '3.3'
 
 services:
-  redis:
+  redis_prod:
     container_name: "redis_prod"
     image: redis
     restart: always
@@ -13,7 +13,7 @@ services:
       interval: 1s
       timeout: 3s
       retries: 30
-  mongo:
+  mongo_prod:
     container_name: "mongo_prod"
     image: mongo
     restart: always
@@ -27,16 +27,16 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-  web:
+  web_prod:
     container_name: "web_prod"
     image: prod
     restart: always
     env_file: .env
     links:
-      - mongo
-      - redis
+      - mongo_prod
+      - redis_prod
     depends_on:
-      - mongo
-      - redis
+      - mongo_prod
+      - redis_prod
     ports:
       - "3000:3000"
