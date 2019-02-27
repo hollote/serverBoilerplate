@@ -1,35 +1,6 @@
 version: '3.3'
 
 services:
-  redis_dev:
-    container_name: "redis_dev"
-    image: redis
-    restart: always
-    ports:
-      - "6379:6379"
-    volumes:
-      - ./data/db/redis/dev/data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 1s
-      timeout: 3s
-      retries: 30
-  mongo_dev:
-    container_name: "mongo_dev"
-    image: mongo
-    restart: always
-    environment:
-      - MONGO_DATA_DIR=/data/db
-      - MONGO_LOG_DIR=/dev/null
-    volumes:
-      - ./data/db/mongo/dev/data:/data/db
-    ports:
-      - "27017:27017"
-    healthcheck:
-      test: ["CMD", "scripts/mongo-healthcheck"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
   web_dev:
     container_name: "web_dev"
     image: dev

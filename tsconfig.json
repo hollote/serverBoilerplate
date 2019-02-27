@@ -8,9 +8,6 @@
     "sourceMap": true,
     "allowSyntheticDefaultImports": true
   },
-  "files": [
-    "./types/custom.d.ts"
-  ],
   "include": [
     "src/**/*"
   ],
