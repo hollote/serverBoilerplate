@@ -6,37 +6,40 @@ import {Request} from 'express';
 
 import {IUserModel, User, userCreate} from '../models/user';
 
-export const localLoginStrategy = (email: string, password: string, cb: any) =>
-  User.findOne({'auth.local.email': email}, (err: any, user: IUserModel) => {
-    if (err) {
-      // TODO: HOW to add test ?
-      return cb(err);
-    }
-    if (!user || !user.validatePassword(password)) {
-      return cb(null, false, {message: 'wrong email or password'});
-    }
-    return cb(null, user);
+export const localLoginCallback = (err: any, user: IUserModel | null, password: string, cb: any) => {
+  if (err) {
+    return cb(err);
+  }
+  if (!user || !user.validatePassword(password)) {
+    return cb(null, false, {message: 'wrong email or password'});
+  }
+  return cb(null, user);
+};
+
+export const localSignupCallback = (err: any, user: IUserModel | null, req: Request, email: string, password: string, cb: any) => {
+  if (err) {
+    return cb(err);
+  }
+  if (user) {
+    return cb(null, false, {message: 'user already created'});
+  }
+
+  // TODO: change all to promises
+  return userCreate({email, username: req.body.username, password}).then((newUser) => {
+    return cb(null, newUser);
+  }, (err: any) => {
+    throw err;
   });
+
+};
+
+export const localLoginStrategy = (email: string, password: string, cb: any) =>
+  User.findOne({'auth.local.email': email}, (err, user) => localLoginCallback(err, user, password, cb));
 
 export const localSignupStrategy = (req: Request, email: string, password: string, cb: any) =>
-  User.findOne({'auth.local.email': email}, (err: any, user: IUserModel) => {
-    if (err) {
-      // TODO: HOW to add test ?
-      return cb(err);
-    }
-    if (user) {
-      return cb(null, false, {message: 'user already created'});
-    }
+  User.findOne({'auth.local.email': email}, (err, user) => localSignupCallback(err, user, req, email, password, cb));
 
-    userCreate({email, username: req.body.username, password}).then((newUser) => {
-      return cb(null, newUser);
-    }, (err: any) => {
-      // TODO: HOW to add test ?
-      throw err;
-    });
-  });
-
-export const serializeUser = (user: IUserModel, cb: (err: any, userId: string) => any) => {
+export const serializeUser = (user: IUserModel, cb: (err: any, user: IUserModel) => any) => {
   cb(null, user.id);
 };
 

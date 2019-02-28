@@ -1,9 +1,12 @@
 import {expect} from 'chai';
 import * as Chance from 'chance';
-import * as mocks from 'node-mocks-http';
+import * as mocks from "node-mocks-http";
+import * as sinon from 'sinon';
+import {Request} from "express";
 
-import {IUserCreateAttr, userCreate, User, IUserModel} from '../../src/models/user';
-import {deserializeUser, localLoginStrategy, localSignupStrategy, serializeUser} from '../../src/config/passport';
+import {IUserCreateAttr, IUserModel, _userCreate} from '../../src/models/user';
+import * as userModel from '../../src/models/user';
+import {localLoginCallback, localSignupCallback} from '../../src/config/passport';
 
 let userAttr: IUserCreateAttr;
 const chance = new Chance();
@@ -17,118 +20,135 @@ const userData = () => {
 };
 
 describe('Passport configuration', () => {
-  beforeEach((done) => {
+  beforeEach(() => {
     userAttr = userData();
-    // clear all db data
-    User.deleteMany({}, done);
   });
 
-  describe('serialize user', () => {
-    it('create userId from user model', (done) => {
-      userCreate(userAttr).then((newUser) => {
-        serializeUser(newUser, (err, userId) => {
-          expect(err).to.be.null;
-          expect(userId).to.be.a('string');
+  describe('Local Signup Callback', () => {
+    it('should return error in case of error', () => {
+      let err = new Error('error');
+      let request = mocks.createRequest({});
+      let cb = (err: any, user: IUserModel | null, req: Request, email: string, desc: { message: string }) => {
+      };
+      let spy = sinon.spy(cb);
+
+      localSignupCallback(err, null, request, userAttr.email, 'password', spy);
+
+      expect(spy.calledOnce).to.be.true;
+      expect(spy.getCall(0).args[0]).to.be.equals(err);
+    });
+
+    it('should return custom error if user exists', () => {
+      let newUser = _userCreate(userAttr);
+      let request = mocks.createRequest({});
+      let cb = (err: any, user: IUserModel | null, req: Request, email: string, desc: { message: string }) => {
+      };
+      let spy = sinon.spy(cb);
+
+      localSignupCallback(null, newUser, request, userAttr.email, 'password', spy);
+
+      expect(spy.calledOnce).to.be.true;
+      expect(spy.getCall(0).args[0]).to.be.equals(null);
+      expect(spy.getCall(0).args[1]).to.be.equals(false);
+      expect(spy.getCall(0).args[2]).to.deep.equals({message: 'user already created'});
+    });
+
+    it('should return user if user is not exists yet', (done) => {
+      let newUser = _userCreate(userAttr);
+      let request = mocks.createRequest({});
+      let cb = (err: any, user: IUserModel | null, req: Request, email: string, desc: { message: string }) => {
+      };
+      let spy = sinon.spy(cb);
+      let stub = sinon.stub(userModel, "userCreate");
+      stub.returns(Promise.resolve(newUser));
+
+      localSignupCallback(null, null, request, userAttr.email, 'password', spy).then(
+        () => {
+          expect(stub.calledOnce).to.be.true;
+          expect(spy.getCall(0).args[0]).to.be.equals(null);
+          expect(spy.getCall(0).args[1]).to.deep.equals(newUser);
+          stub.restore();
           done();
         });
-      }, (err: any) => {
-        done(new Error(err));
-      });
     });
+
+    it('should return error if user can\'t be created', (done) => {
+      let request = mocks.createRequest({});
+      let cb = (err: any, user: IUserModel | null, req: Request, email: string, desc: { message: string }) => {
+      };
+      let spy = sinon.spy(cb);
+      let stub = sinon.stub(userModel, "userCreate");
+      stub.returns(Promise.reject(new Error('error')));
+
+      localSignupCallback(null, null, request, userAttr.email, 'password', spy)
+        .then(() => {
+          done(new Error('error'));
+        })
+        .catch(() => {
+          expect(spy.calledOnce).to.be.false;
+          stub.restore();
+          done();
+        });
+    })
   });
 
-  describe('deserialize user', () => {
-    it('get user from userId if user exists', (done) => {
-      userCreate(userAttr).then((newUser) => {
-        deserializeUser(newUser.id, (err, user) => {
-          expect(err).to.be.null;
-          expect(user).to.have.property('id');
-          expect(user).to.have.nested.property('auth.local.email');
-          expect(user).to.have.nested.property('auth.local.username');
-          expect(user).to.have.nested.property('auth.local.password');
-          done();
-        });
-      }, (err: any) => {
-        done(new Error(err));
-      });
-    });
-    it('get error if user does not exists', (done) => {
-      deserializeUser(chance.string({length: 24}), (err, user) => {
-        expect(err).not.to.be.null;
-        expect(user).to.be.undefined;
-        done();
-      });
-    });
-  });
+  describe('Local Login Callback', () => {
+    it('should return error in case of error', () => {
+      let err = new Error('error');
+      let cb = (err: any, user: IUserModel | null, desc: { message: string }) => {
+      };
+      let spy = sinon.spy(cb);
 
-  describe('signup strategy', () => {
-    it('create new user without errors', (done) => {
-      const req = mocks.createRequest({
-        body: userAttr,
-      });
-      localSignupStrategy(req, userAttr.email, userAttr.password, (err: any, user: IUserModel, desc: { message: string }) => {
-        expect(err).to.be.null;
-        expect(user).to.have.property('id');
-        expect(user).to.have.nested.property('auth.local.email');
-        expect(user).to.have.nested.property('auth.local.username');
-        expect(user).to.have.nested.property('auth.local.password');
-        done();
-      });
-    });
-    it('create user with existed data return error', (done) => {
-      userCreate(userAttr).then((newUser) => {
-        const req = mocks.createRequest({
-          body: userAttr,
-        });
-        localSignupStrategy(req, userAttr.email, userAttr.password, (err: any, user: IUserModel, desc: { message: string }) => {
-          expect(err).to.be.null;
-          expect(user).to.be.false;
-          expect(desc).to.have.property('message');
-          done();
-        });
-      }, (err: any) => {
-        done(new Error(err));
-      });
-    });
-  });
+      localLoginCallback(err, null, 'password', spy);
 
-  describe('signin strategy', () => {
-    it('login with existed user and correct credentials', (done) => {
-      userCreate(userAttr).then(() => {
-        localLoginStrategy(userAttr.email, userAttr.password, (err: any, user: IUserModel, desc: { message: string }) => {
-          // console.log(err);
-          // console.log(user);
-          // console.log(desc);
-          expect(err).to.be.null;
-          expect(user).to.have.property('id');
-          expect(user).to.have.nested.property('auth.local.email');
-          expect(user).to.have.nested.property('auth.local.username');
-          expect(user).to.have.nested.property('auth.local.password');
-          done();
-        });
-      }, (err: any) => {
-        done(new Error(err));
-      });
+      expect(spy.calledOnce).to.be.true;
+      expect(spy.getCall(0).args[0]).to.be.equals(err);
     });
-    it('login with not existed user', (done) => {
-      localLoginStrategy(userAttr.email, userAttr.password, (err: any, user: IUserModel, desc: { message: string }) => {
-        expect(err).to.be.null;
-        expect(user).to.be.false;
-        expect(desc).to.have.property('message');
-        done();
-      });
+
+    it('should return custom error if no user provided', () => {
+      let cb = (err: any, user: IUserModel | null, desc: { message: string }) => {
+      };
+      let spy = sinon.spy(cb);
+
+      localLoginCallback(null, null, 'password', spy);
+
+      expect(spy.calledOnce).to.be.true;
+      expect(spy.getCall(0).args[0]).to.be.equals(null);
+      expect(spy.getCall(0).args[1]).to.be.equals(false);
+      expect(spy.getCall(0).args[2]).to.deep.equals({message: 'wrong email or password'});
     });
-    it('login with existed user and incorrect password', (done) => {
-      userCreate(userAttr).then(() => {
-        localLoginStrategy(userAttr.email, chance.word({syllables: 3}), (err: any, user: IUserModel, desc: { message: string }) => {
-          expect(err).to.be.null;
-          expect(user).to.be.false;
-          expect(desc).to.have.property('message');
-          done();
-        });
-      }, (err: any) => {
-        done(new Error(err));
-      });
+
+    it('should return custom error if user have wrong', () => {
+      let newUser = _userCreate(userAttr);
+      let cb = (err: any, user: IUserModel | null, desc: { message: string }) => {
+      };
+      let spy = sinon.spy(cb);
+      let stub = sinon.stub(newUser, "validatePassword");
+      stub.withArgs('password').returns(false);
+
+      localLoginCallback(null, newUser, 'password', spy);
+
+      expect(spy.calledOnce).to.be.true;
+      expect(spy.getCall(0).args[0]).to.be.equals(null);
+      expect(spy.getCall(0).args[1]).to.be.equals(false);
+      expect(spy.getCall(0).args[2]).to.deep.equals({message: 'wrong email or password'});
+      stub.restore();
+    });
+
+    it('should return user if user provided', () => {
+      let newUser = _userCreate(userAttr);
+      let cb = (err: any, user: IUserModel | null, desc: { message: string }) => {
+      };
+      let spy = sinon.spy(cb);
+      let stub = sinon.stub(newUser, "validatePassword");
+      stub.withArgs('password').returns(true);
+
+      localLoginCallback(null, newUser, 'password', spy);
+
+      expect(spy.calledOnce).to.be.true;
+      expect(spy.getCall(0).args[0]).to.be.equals(null);
+      expect(spy.getCall(0).args[1]).to.deep.equals(newUser);
+      stub.restore();
     });
   });
 });

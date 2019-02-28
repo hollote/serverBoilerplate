@@ -30,6 +30,7 @@
     "no-unused-expression": true,
     "no-unused-variable": false,
     "no-var-requires": false,
-    "semicolon": true
+    "semicolon": true,
+    "variable-name": false
   }
 }

@@ -24,7 +24,6 @@ router.use((req: Request, res: Response) => {
 });
 // TODO: create test
 router.use((err: CustomErrback, req: Request, res: Response) => {
-  console.log(1);
   res.status(err.status || 500);
   return res.json({success: false, error: {message: req.app.get('env') === 'development' ? err.message : ''}});
 });
