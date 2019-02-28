@@ -1,5 +1,4 @@
 # Server boilerplate
-### Badges will be here https://shields.io/#/
 Server boilerplate API
 
 ### Environment:
@@ -13,52 +12,49 @@ Server boilerplate API
 
 ### Architecture
 
-    └─server               # server folder
-       ├─app
-       │  ├─auth
-       │  │  └─strategies  # strategies for auth
-       │  ├─controllers    # routes
-       │  │  └─api         # api
-       │  ├─models         # models
-       │  ├─utils          # utils
-       │  └─views          # will be removed
-       ├─bin               # launch application 
-       ├─config            # configs folder
-       └─test              # test folder
-
-### Install
-install yarn ( https://yarnpkg.com/lang/en/docs/install/ )
-#### Setup using Docker:
-- install Docker
---dev
-```bash
-npm run create_image_dev
-npm run docker_dev
+```text
+   ├─src
+   │  ├─config         # configs folder
+   │  ├─interfaces     # interfaces
+   │  ├─middleware     # middleware for express
+   │  ├─models         # models
+   │  ├─routes         # routes      
+   │  └─utils          # utils
+   ├─bin               # launch application 
+   ├─test              # test folder
+   └─scripts           # scripts folder
 ```
 
---prod
+#### How to run locally:
+
+Install yarn (https://yarnpkg.com/lang/en/docs/install/)
 ```bash
-npm run create_image_prod
-npm run docker_prod
+    yarn install
+    docker-compose -f ./docker-compose.dev-db.yml up -d  # run mongo, redis in docker
+    yarn run debug # launch server with chrome debug
+```
+When commit, need to up test db `docker-compose -f ./docker-compose.test.yml up -d`
+#### How to run tests locally:
+
+```bash
+    docker-compose -f ./docker-compose.test.yml up -d
+    yarn run test
 ```
 
-#### Setup Locally:
-
+#### To see test coverage
 ```bash
-    instructions will be here
+    docker-compose -f ./docker-compose.test.yml up -d
+    yarn run coverage
 ```
+After run `yarn run coverage` you can also see /reports/coverage/index.html
 
-#### How to run:
-1. sh docker.sh prod
-2. sh docker.sh dev
-Add delay to launch node app (delay or healthcheck)
+#### How to run in docker:
+1. sh docker.sh prod - wip
+2. sh docker.sh dev - wip
 
 ### Roadmap
-- add tests
-- setup linters
-- setup hooks
-- transform to typescript
-- create API documentation
-- add more strategies to login
-- add linking of accounts
+- add tests for endpoints
+- create API documentation (swagger UI)
+- create correct setup for docker dev, prod
+- switch from cookies to JWT tokens
 - add RBAC

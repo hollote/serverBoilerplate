@@ -12,6 +12,9 @@ RUN yarn install --production
 # Copy app source code
 COPY . .
 
+# Compile Typescript to Javascript
+RUN yarn run tsc
+
 #Expose port and start application
 EXPOSE 3000
-CMD [ "npm", "start" ]
+CMD [ "yarn", "start" ]
